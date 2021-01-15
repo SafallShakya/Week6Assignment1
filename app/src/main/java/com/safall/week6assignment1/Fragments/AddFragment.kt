@@ -1,14 +1,15 @@
 package com.safall.week6assignment1.Fragments
 
 import android.os.Bundle
+import android.text.TextUtils
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.RadioButton
+import android.widget.*
+import com.safall.week6assignment1.Models.Student
 import com.safall.week6assignment1.R
+import com.safall.week6assignment1.Storage
 
 
 class AddFragment : Fragment() {
@@ -25,6 +26,7 @@ class AddFragment : Fragment() {
     private lateinit var address : String
     private lateinit var imgurl : String
     private lateinit var gender : String
+    private lateinit var rdoGroup : RadioGroup
 
 
     override fun onCreateView(
@@ -41,28 +43,53 @@ class AddFragment : Fragment() {
         rdoMale = view.findViewById(R.id.rdoMale)
         rdoFemale = view.findViewById(R.id.rdoFemale)
         rdoOthers = view.findViewById(R.id.rdoOthers)
-
-        rdoMale.setOnClickListener{
-            gender = "Male"
-        }
-        rdoFemale.setOnClickListener{
-            gender = "Female"
-        }
-        rdoOthers.setOnClickListener{
-            gender = "Others"
-        }
+        rdoGroup = view.findViewById(R.id.radioGroup)
 
         btnsave.setOnClickListener{
-            fullname = etfullname.text.toString()
-            age = etage.text.toString().toInt()
-            address = etaddress.text.toString()
-            imgurl = etimgurl.text.toString()
+            if (isValid()) {
+                val checkID = rdoGroup.checkedRadioButtonId
+                val checkedrdo: RadioButton = view.findViewById(checkID)
+                gender = checkedrdo.text.toString();
+                val storage = Storage()
+                fullname = etfullname.text.toString()
+                age = etage.text.toString().toInt()
+                address = etaddress.text.toString()
+                imgurl = etimgurl.text.toString()
+                storage.addStudent(Student(fullname, imgurl, address, age.toInt(), gender))
+
+                Toast.makeText(activity?.applicationContext,"Student Added", Toast.LENGTH_LONG).show()
+                clearFields()
+            }
         }
-
-
-
         return view
     }
-
-
+    private fun clearFields() {
+        etfullname.setText("")
+        etage.setText("")
+        rdoGroup.clearCheck()
+        etaddress.setText("")
+        etimgurl.setText("")
+        rdoMale.isChecked = true
+    }
+    private fun isValid(): Boolean {
+        var flag = true
+        if (TextUtils.isEmpty(etfullname.text)) {
+            etfullname.error = "Please enter Username"
+            etfullname.requestFocus()
+            flag = false
+        } else if (TextUtils.isEmpty(etage.text)){
+            etage.error="Please enter age"
+            etage.requestFocus()
+            flag = false
+        } else if (TextUtils.isEmpty(etaddress.text)){
+            etaddress.error="Please enter address"
+            etaddress.requestFocus()
+            flag = false
+        }else if (TextUtils.isEmpty(etimgurl.text)){
+            etimgurl.error="Please enter image URL"
+            etimgurl.requestFocus()
+            flag = false
+        }
+        return flag
+    }
 }

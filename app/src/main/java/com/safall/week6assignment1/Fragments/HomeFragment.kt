@@ -5,33 +5,34 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Adapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.safall.week6assignment1.Models.Student
 import com.safall.week6assignment1.R
 import com.safall.week6assignment1.adapters.StudentAdapter
 
 
+
+
 class HomeFragment : Fragment() {
-    private var lstStudents = ArrayList<Student>()
-    private lateinit var recyclerView: RecyclerView
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
+    private var layoutManager: RecyclerView.LayoutManager? = null
+    private var adapter: RecyclerView.Adapter<StudentAdapter.StudentViewHolder>? = null
+    private lateinit var review: RecyclerView
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_home, container, false)
-        recyclerView = view.findViewById(R.id.recyclerView)
-        val adapter = StudentAdapter(lstStudents,this)
-        recyclerView.layoutManager = LinearLayoutManager(this.activity)
-        recyclerView.adapter = adapter
-        return view
+        val root = inflater.inflate(R.layout.fragment_home, container, false)
+        review = root.findViewById(R.id.recyclerView)
+
+        return root
+    }
+    override fun onViewCreated(itemView: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(itemView, savedInstanceState)
+        review.apply {
+            layoutManager = LinearLayoutManager(activity)
+            adapter = StudentAdapter(context)
+        }
     }
 
 

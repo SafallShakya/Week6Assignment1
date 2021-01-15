@@ -4,7 +4,6 @@ import android.os.Parcel
 import android.os.Parcelable
 
 data class Student (
-    val studentId : Int? = null,
     val studentName : String? = null,
     val studentImageURL : String? = null,
     val studentAddress : String? = null,
@@ -12,7 +11,6 @@ data class Student (
     val studentGender : String? = null
         ):Parcelable {
         constructor(parcel: Parcel) : this(
-                parcel.readValue(Int::class.java.classLoader) as? Int,
                 parcel.readString(),
                 parcel.readString(),
                 parcel.readString(),
@@ -21,7 +19,6 @@ data class Student (
         }
 
         override fun writeToParcel(parcel: Parcel, flags: Int) {
-                parcel.writeValue(studentId)
                 parcel.writeString(studentName)
                 parcel.writeString(studentImageURL)
                 parcel.writeString(studentAddress)
